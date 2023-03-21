@@ -1,8 +1,10 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget, QMessageBox
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget, QMessageBox, QApplication
 
 from gen_pass.password_generator import PasswordGenerator
 from validation.validation import validate_password_length
+
+from ui.styles import set_dark_theme, set_fonts
 
 
 class MainWindow(QMainWindow):
@@ -32,6 +34,13 @@ class MainWindow(QMainWindow):
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
+
+        # Set styles and fonts
+        app = QApplication.instance()
+        if app is None:
+            app = QApplication([])
+        set_dark_theme(app)
+        set_fonts(self)
 
     def generate_password(self):
         length_str = self.length_input.text()

@@ -1,8 +1,8 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QLabel, QLineEdit, QPushButton, QWidget, QMessageBox
 
-# noinspection PyUnresolvedReferences
-from generator.password_generator import PasswordGenerator
+from gen_pass.password_generator import PasswordGenerator
+from validation.validation import validate_password_length
 
 
 class MainWindow(QMainWindow):
@@ -34,7 +34,12 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def generate_password(self):
-        length = int(self.length_input.text())
+        length_str = self.length_input.text()
+        error_message = validate_password_length(length_str)
+        if error_message:
+            QMessageBox.warning(self, 'Invalid input', error_message)
+            return
+        length = int(length_str)
         generator = PasswordGenerator(length)
         password = generator.generate()
         self.password_label.setText(password)
